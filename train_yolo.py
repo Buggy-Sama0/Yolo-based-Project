@@ -10,7 +10,7 @@ model = YOLO('yolov8n.pt')
 
 # Fine-tune the model
 model.train(
-    data='data.yaml',
+    data=
     epochs=50,           # Set the number of epochs as needed
     imgsz=320,           # Image size
     batch=4,            # Batch size

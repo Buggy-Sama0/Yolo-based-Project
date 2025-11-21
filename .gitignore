@@ -20,6 +20,12 @@ Thumbs.db
 
 # Ignore annotation and image zips
 *.zip
+# User-specified files to ignore
+convert_coco_to_yolo.py
+1.py
+custom_augmentation.py
+prepare_yolo_dataset.py
+yolo_detect.py
 # Ignore large COCO annotation folders
 annotations_trainval2017/
 # Ignore dataset and split folders
