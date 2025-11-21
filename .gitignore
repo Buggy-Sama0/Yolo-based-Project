@@ -1,0 +1,30 @@
+# Ignore Python virtual environment
+/yolo-env/
+
+# Ignore Python cache and logs
+__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore model weights and runs
+runs/
+*.pt
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore annotation and image zips
+*.zip
+# Ignore large COCO annotation folders
+annotations_trainval2017/
+# Ignore dataset and split folders
+datasets/
+test/
+train/
+valid/
+annotations_trainval2017/annotations/
