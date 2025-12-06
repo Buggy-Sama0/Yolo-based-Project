@@ -16,7 +16,7 @@
    ```
 4. Train your model:
    ```bash
-   python train_yolo.py
+   python train_yolo_by_GPU.py
    ```
 5. Try the real-time webcam demo:
    ```bash
@@ -27,23 +27,21 @@
 
 ## Customization
 
-## Evaluation
 
+## Using `notebook.ipynb`
 
+The `notebook.ipynb` file provides an interactive environment for:
 
-results = model.train(
-    data='data.yaml',
-    epochs=20,
-    imgsz=320,
-    batch=4,
-    device='cpu',
-    patience=5,
-    lr0=0.01,
-    optimizer='Adam',
-    weight_decay=0.0005,
-    cache=True,
-    workers=1,
-    project='runs/detect/new_train',
-    save=True
-)
+- **Data Exploration:** Load and visualize your dataset, inspect class distributions, and check sample images.
+- **Model Training:** Run YOLO training cells, experiment with hyperparameters, and monitor training progress.
+- **Evaluation & Visualization:** Plot metrics, display confusion matrices, and visualize detection results on images.
+- **Rapid Prototyping:** Test new ideas, preprocessing steps, or model tweaks before integrating into scripts.
+
+### How to Use
+
+1. Open `notebook.ipynb` in JupyterLab, VS Code, or your preferred notebook editor.
+2. Run cells sequentially to follow the workflow, or jump to specific sections as needed.
+3. Modify code cells to experiment with different parameters, models, or visualizations.
+4. Use output cells to interpret results and guide further development.
+
 
