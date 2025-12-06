@@ -2,14 +2,6 @@
 
 ## Project Structure
 
-- `images/train`, `images/val`: Place your training and validation images here.
-- `labels/train`, `labels/val`: Place your YOLO-format label files here.
-- `data.yaml`: Dataset and augmentation configuration.
-- `requirements.txt`: Python dependencies.
-- `quick_test.py`: Run a quick YOLOv8 test.
-- `train_yolo.py`: Script to train YOLOv8 on your dataset.
-- `real_time_demo.py`: Real-time webcam detection demo.
-- `custom_augmentation.py`: Custom data augmentation pipeline.
 
 ## Setup
 
@@ -32,14 +24,10 @@
    ```
 
 ## Dataset Conversion
-- Convert your Mask R-CNN/COCO dataset to YOLO format using Roboflow or a custom script.
 
 ## Customization
-- Edit `custom_augmentation.py` to add your own augmentations.
-- Adjust `data.yaml` for your classes and augmentation settings.
 
 ## Evaluation
-- Compare YOLO results with your Mask R-CNN baseline using mAP, precision, recall, and FPS.
 
 
 

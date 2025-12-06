@@ -1,3 +1,5 @@
 ultralytics
 albumentations
 opencv-python
+pandas
+Flask

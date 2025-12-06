@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Object Detection Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%); min-height: 100vh; color: #333; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 0; }
+        .container { max-width: 1100px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px #e0e7ef; overflow: hidden; }
+        header { background: linear-gradient(90deg, #1a2a6c 0%, #3a7bd5 100%); color: white; padding: 32px 48px 24px 48px; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 2.3rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .subtitle { font-size: 1.1rem; opacity: 0.9; font-weight: 300; }
+        .logo { font-size: 2.5rem; opacity: 0.9; }
+        .main-content { padding: 40px 48px; }
+        .section-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; color: #2d3748; display: flex; align-items: center; }
+        .section-title i { margin-right: 12px; color: #3a7bd5; }
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px; margin-bottom: 40px; }
+        .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent; }
+        .image-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); border-color: #3a7bd5; }
+        .image-card.selected { border-color: #3a7bd5; box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2); }
+        .card-header { height: 140px; overflow: hidden; }
+        .card-header img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .image-card:hover .card-header img { transform: scale(1.05); }
+        .card-body { padding: 16px; }
+        .card-title { font-weight: 600; margin-bottom: 5px; color: #2d3748; font-size: 1.02rem; }
+        .card-meta { font-size: 0.85rem; color: #718096; display: flex; align-items: center; }
+        .card-meta i { margin-right: 5px; }
+        .radio-custom { display: flex; align-items: center; margin-top: 15px; }
+        .radio-custom input { display: none; }
+        .radio-label { display: flex; align-items: center; cursor: pointer; font-weight: 500; color: #4a5568; }
+        .radio-label::before { content: ''; width: 20px; height: 20px; border: 2px solid #cbd5e0; border-radius: 50%; margin-right: 10px; transition: all 0.2s ease; }
+        input:checked + .radio-label::before { border-color: #3a7bd5; background-color: #3a7bd5; box-shadow: inset 0 0 0 4px white; }
+        .action-section { background-color: #f8fafc; padding: 28px; border-radius: 14px; text-align: center; margin-top: 30px; }
+        .action-title { font-size: 1.2rem; margin-bottom: 18px; color: #2d3748; }
+        .btn-detect { background: linear-gradient(90deg, #1a2a6c 0%, #3a7bd5 100%); color: white; border: none; padding: 15px 38px; font-size: 1.05rem; font-weight: 600; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(58, 123, 213, 0.3); display: inline-flex; align-items: center; justify-content: center; }
+        .btn-detect:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(58, 123, 213, 0.4); }
+        .btn-detect:active { transform: translateY(0); }
+        .btn-detect i { margin-right: 12px; font-size: 1.2rem; }
+        .btn-detect:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .no-images { text-align: center; padding: 60px 20px; color: #718096; font-size: 1.1rem; }
+        .no-images i { font-size: 3rem; margin-bottom: 20px; opacity: 0.5; }
+        @media (max-width: 900px) { .container { border-radius: 12px; } header { padding: 22px 12px; } .main-content { padding: 22px 12px; } .image-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 18px; } }
+        @media (max-width: 600px) { h1 { font-size: 1.5rem; } .btn-detect { width: 100%; padding: 15px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>YOLO Object Detection Dashboard</h1>
+                    <p class="subtitle">Select an image to run detection with YOLOv8 model</p>
+                </div>
+                <div class="logo">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+        </header>
+        <div class="main-content">
+            <div class="section-title">
+                <i class="fas fa-th"></i>
+                <span>Select an Image for Detection</span>
+            </div>
+            <form method="post" action="/upload" enctype="multipart/form-data" id="upload-form" style="margin-bottom:32px;">
+                <div style="background:#f8fafc; border-radius:14px; padding:28px; text-align:center; margin-bottom:30px;">
+                    <label for="file-upload" style="font-size:1.1rem; font-weight:500; color:#2d3748; margin-bottom:12px; display:block;">
+                        <i class="fas fa-upload"></i> Upload Image or Video
+                    </label>
+                    <input type="file" id="file-upload" name="file" accept="image/*,video/*" style="margin-bottom:18px; font-size:1rem;" required>
+                    <button type="submit" class="btn-detect" style="margin-top:10px;">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload & Detect
+                    </button>
+                    <p style="margin-top: 15px; color: #718096; font-size: 0.9rem;">Supported formats: JPG, PNG, MP4, AVI, etc.</p>
+                </div>
+            </form>
+            {% if images %}
+            <form method="post" action="/detect" id="detection-form">
+                <div class="image-grid">
+                    {% for image in images %}
+                    <div class="image-card" onclick="selectImage('{{ image }}')">
+                        <div class="card-header">
+                            <img src="{{ url_for('static', filename=image) }}" alt="{{ image }}" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">{{ image|truncate(20) }}</div>
+                            <div class="card-meta">
+                                <i class="far fa-file-image"></i>
+                                <span>Image file</span>
+                            </div>
+                            <div class="radio-custom">
+                                <input type="radio" name="image" id="img-{{ loop.index }}" value="{{ image }}">
+                                <label for="img-{{ loop.index }}" class="radio-label">Select for detection</label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="action-section">
+                    <div class="action-title">Ready to detect objects in the selected image?</div>
+                    <button type="submit" class="btn-detect" id="detect-btn" disabled>
+                        <i class="fas fa-play-circle"></i>
+                        Run YOLO Detection
+                    </button>
+                    <a href="/webcam" class="btn-detect" style="margin-left:16px; background:linear-gradient(90deg,#3182ce 0%,#6366f1 100%);">
+                        <i class="fas fa-video"></i> Webcam Detection
+                    </a>
+                    <p style="margin-top: 15px; color: #718096; font-size: 0.9rem;">
+                        The detection process may take a few seconds to complete.
+                    </p>
+                </div>
+            </form>
+            {% else %}
+            <div class="no-images">
+                <i class="fas fa-folder-open"></i>
+                <h3>No images available</h3>
+                <p>Please add images to the static directory to use the detection system.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function selectImage(imageName) {
+            document.querySelectorAll('.image-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const radioBtn = document.querySelector(`input[value="${imageName}"]`);
+            if (radioBtn) {
+                radioBtn.checked = true;
+                const card = radioBtn.closest('.image-card');
+                if (card) {
+                    card.classList.add('selected');
+                }
+                document.getElementById('detect-btn').disabled = false;
+            }
+        }
+        document.getElementById('detection-form').addEventListener('submit', function(e) {
+            const btn = document.getElementById('detect-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 5000);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="image"]');
+            if (radios.length > 0) {
+                radios[0].checked = true;
+                radios[0].closest('.image-card').classList.add('selected');
+                document.getElementById('detect-btn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Webcam Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%); min-height: 100vh; color: #333; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px #e0e7ef; overflow: hidden; padding: 32px; text-align: center; }
+        h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 18px; letter-spacing: -0.5px; }
+        .webcam-video { width: 100%; max-width: 640px; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.09); margin-bottom: 24px; }
+        .back-btn { display: inline-block; background: linear-gradient(90deg, #6366f1 0%, #3182ce 100%); color: #fff; border: none; border-radius: 10px; padding: 12px 32px; font-size: 1.1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; margin-top: 18px; box-shadow: 0 2px 8px rgba(99,102,241,0.08); }
+        .back-btn:hover { background: linear-gradient(90deg, #4338ca 0%, #2563eb 100%); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-video"></i> Real-Time YOLO Webcam Detection</h1>
+        <img id="webcam-stream" class="webcam-video" src="/webcam_feed" alt="Webcam Stream" />
+        <br>
+        <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+</body>
+</html>
