@@ -11,8 +11,8 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Ignore model weights and runs
-runs/
-*.pt
+
+
 
 # Ignore OS files
 .DS_Store
