@@ -1,3 +1,4 @@
+
 from flask import Response
 from flask import Flask, render_template, request, url_for, send_from_directory
 import os
@@ -80,7 +81,6 @@ def upload():
     is_video = ext in ['.mp4', '.avi', '.mov', '.mkv', '.webm']
     result_msg = f"Detection completed for {filename}."
     product_counts = {}
-    img_b64 = None
     if yolo_model:
         if is_image:
             results = yolo_model(temp_path)
@@ -107,12 +107,16 @@ def upload():
                     y_offset += 30
                 _, buffer = cv2.imencode('.png', image)
                 img_b64 = base64.b64encode(buffer).decode('utf-8')
+
+                return render_template('result.html', result=result_msg, image_b64=img_b64, product_counts=product_counts)
         elif is_video:
-            cap = cv2.VideoCapture(0)
-            frame_count = 0
+            cap = cv2.VideoCapture(temp_path)  # Open the uploaded video file
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out_path = os.path.join('temp_uploads', 'detected_' + filename)
+            out = cv2.VideoWriter(out_path, fourcc, cap.get(cv2.CAP_PROP_FPS), (int(cap.get(3)), int(cap.get(4))))
             while cap.isOpened():
                 ret, frame = cap.read()
-                if not ret or frame_count > 0:
+                if not ret:
                     break
                 results = yolo_model(frame)
                 for r in results:
@@ -135,10 +139,12 @@ def upload():
                     for name, count in product_counts.items():
                         cv2.putText(frame, f"{name}: {count}", (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
                         y_offset += 30
-                    _, buffer = cv2.imencode('.png', frame)
-                    img_b64 = base64.b64encode(buffer).decode('utf-8')
-                frame_count += 1
+                out.write(frame)
             cap.release()
+            out.release()
+            video_url = url_for('mediaa', filename='detected_' + filename)
+
+            return render_template('result.html', result=result_msg, video_url=video_url, product_counts=product_counts)
         else:
             result_msg = "Unsupported file type."
     else:
@@ -149,7 +155,12 @@ def upload():
     except Exception:
         pass
 
-    return render_template('result.html', result=result_msg, image_b64=img_b64, product_counts=product_counts)
+# Route to serve processed videos from temp_uploads
+@app.route('/mediaa/<filename>')
+def media(filename):
+    return send_from_directory('temp_uploads', filename)
+
+   
 
 
 # Webcam routes 

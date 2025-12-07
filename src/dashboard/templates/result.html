@@ -25,7 +25,14 @@
 <body>
     <div class="container">
         <h1>Detection Result</h1>
+        {% if video_url %}
+        <video width="640" controls style="margin-bottom:28px; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.09);">
+            <source src="{{ video_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% elif image_b64 %}
         <img class="result-img" src="data:image/png;base64,{{ image_b64 }}" alt="Detected Image">
+        {% endif %}
         <div class="result-info">
             <span><i class="fa-solid fa-box"></i> Products Detected: {{ product_counts.values() | sum }}</span>
         </div>
