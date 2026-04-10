@@ -101,7 +101,7 @@ Unlike standard object detectors, **EcoVision** specializes in "Sub-Class Distin
 **Project Name:** EcoVision  
 **Project Category:** Information Technology / Innovative Inventions  
 **Target:** Smart Waste Management & Automated Retail  
-**Institution:** [Your University Name]
+**Institution:** Hong Kong Metropolitan University
 
 
 
